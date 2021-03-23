@@ -15,15 +15,6 @@ from collections import Counter
 from scipy.cluster.hierarchy import linkage, dendrogram
 from sklearn.cluster import AgglomerativeClustering
 
-#
-def BrierScore(obs,model):
-    
-    N = len(obs)
-    BS = np.sum((obs - model)**2)*(1/N)
-
-    return(BS)
-
-
 
 def GaussianKernel(r,bound=0.5):
     '''
