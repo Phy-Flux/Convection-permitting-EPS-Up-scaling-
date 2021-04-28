@@ -10,7 +10,7 @@ forecast for precipitation.
 
 import numpy as np
 import statistics as stat
-from scipy.ndimage import convolve
+from scipy.ndimage import convolve, median_filter
 from collections import Counter
 from scipy.cluster.hierarchy import linkage, dendrogram
 from sklearn.cluster import AgglomerativeClustering
@@ -286,18 +286,8 @@ def MedianFiltering(prob_matrix, up=6):
     '''
   # Kernel size
     side = up*2 + 1
-    kernel_median = 0
-    
-    lx = int(prob_matrix.shape[0]) ;  ly = int(prob_matrix.shape[1])
-    median_matrix = np.zeros((lx-2*up, ly-2*up))
-
-    for i in range(up,lx-up):
-        for j in range(up,ly-up):
-            mini_matrix = prob_matrix[i-up:i+up+1,j-up:j+up+1]
-            kernel_median = mini_matrix.reshape(side*side,1)
-            #up_scaled_matrix[i,j] = (kernel_median.max())
-            median_matrix[i-up,j-up] = stat.median(kernel_median)  
-    return(median_matrix)
+    median_matrix = median_filter(prob_matrix, side)
+    return(median_matrix[up:-up, up:-up])
 
 def FixedUpScaling(prob_matrix,rad=5,coeff='Gaussian', Gauss_bound = 1):
     dic_kernel = {'Ones': np.ones((rad,rad)),'Gaussian': GaussianKernel(r=rad, bound=Gauss_bound)[0]}
